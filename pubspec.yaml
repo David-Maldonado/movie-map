@@ -1,5 +1,5 @@
-name: cinemapedia
-description: "A new Flutter project."
+name: moviemap
+description: "A movie, series, and more explorer app."
 publish_to: 'none'
 version: 0.1.0
 

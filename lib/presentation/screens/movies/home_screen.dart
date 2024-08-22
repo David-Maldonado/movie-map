@@ -1,7 +1,7 @@
-import 'package:cinemapedia/presentation/providers/movies/movies_providers.dart';
-import 'package:cinemapedia/presentation/providers/movies/movies_slideShow_providers.dart';
-import 'package:cinemapedia/presentation/providers/providers.dart';
-import 'package:cinemapedia/presentation/widgets/widgets.dart';
+import 'package:moviemap/presentation/providers/movies/movies_providers.dart';
+import 'package:moviemap/presentation/providers/movies/movies_slideShow_providers.dart';
+import 'package:moviemap/presentation/providers/providers.dart';
+import 'package:moviemap/presentation/widgets/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 

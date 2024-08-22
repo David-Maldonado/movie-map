@@ -1,7 +1,7 @@
 //leer varios modelos y crear la entidad, es su objetivo.
 
-import 'package:cinemapedia/domain/entities/movie.dart';
-import 'package:cinemapedia/infrastructure/models/moviedb/movie_moviedb.dart';
+import 'package:moviemap/domain/entities/movie.dart';
+import 'package:moviemap/infrastructure/models/moviedb/movie_moviedb.dart';
 
 class MovieMapper {
   static Movie movieDBToEntity(MovieMovieDb moviedb) => Movie(
