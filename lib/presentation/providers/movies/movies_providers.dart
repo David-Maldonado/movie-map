@@ -6,28 +6,28 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 //la clase que lo controla MoviesNotifier o para notificar, y la data que fluye es la List<Movie>
 final nowPlayingMoviesProvider =
     StateNotifierProvider<MoviesNotifier, List<Movie>>((ref) {
-  final fetchMoreMovies = ref.watch(moviRepositoryProvider).getNowPlaying;
+  final fetchMoreMovies = ref.watch(movieRepositoryProvider).getNowPlaying;
   return MoviesNotifier(
       fetchMoreMovies: fetchMoreMovies); //devuelve la instancia
 });
 final popularMoviesProvider =
     StateNotifierProvider<MoviesNotifier, List<Movie>>((ref) {
   //getPopular se llama la referencia, no se ejecuta ()
-  final fetchMoreMovies = ref.watch(moviRepositoryProvider).getPopular;
+  final fetchMoreMovies = ref.watch(movieRepositoryProvider).getPopular;
   return MoviesNotifier(
       fetchMoreMovies: fetchMoreMovies); //devuelve la instancia
 });
 final upcommingMoviesProvider =
     StateNotifierProvider<MoviesNotifier, List<Movie>>((ref) {
   //getPopular se llama la referencia, no se ejecuta ()
-  final fetchMoreMovies = ref.watch(moviRepositoryProvider).getUpComming;
+  final fetchMoreMovies = ref.watch(movieRepositoryProvider).getUpComming;
   return MoviesNotifier(
       fetchMoreMovies: fetchMoreMovies); //devuelve la instancia
 });
 final topRatedMoviesProvider =
     StateNotifierProvider<MoviesNotifier, List<Movie>>((ref) {
   //getPopular se llama la referencia, no se ejecuta ()
-  final fetchMoreMovies = ref.watch(moviRepositoryProvider).getTopRated;
+  final fetchMoreMovies = ref.watch(movieRepositoryProvider).getTopRated;
   return MoviesNotifier(
       fetchMoreMovies: fetchMoreMovies); //devuelve la instancia
 });

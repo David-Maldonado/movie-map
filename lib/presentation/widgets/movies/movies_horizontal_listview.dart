@@ -2,6 +2,7 @@ import 'package:moviemap/config/helpers/human_formats.dart';
 import 'package:moviemap/domain/entities/movie.dart';
 import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 class MoviesHorizontalListview extends StatefulWidget {
   final List<Movie> movies;
@@ -109,7 +110,11 @@ class _Slide extends StatelessWidget {
                       ),
                     );
                   }
-                  return FadeIn(child: child);
+                  //imagen dentro del detector de gestos
+                  return GestureDetector(
+                    onTap: () => context.push('/movie/${movie.id}'),
+                    child: FadeIn(child: child),
+                  );
                 }),
               ),
             ),

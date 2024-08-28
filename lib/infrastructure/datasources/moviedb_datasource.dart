@@ -1,6 +1,7 @@
 //únicamente para trabajar con the moviedb, si tendremos otra fuente de datos crearemos otra clase especialmente.
 import 'package:moviemap/config/constants/environment.dart';
 import 'package:moviemap/infrastructure/mappers/movie_mapper.dart';
+import 'package:moviemap/infrastructure/models/moviedb/movie_details.dart';
 import 'package:moviemap/infrastructure/models/moviedb/moviedb_response.dart';
 import 'package:dio/dio.dart';
 import 'package:moviemap/domain/datasources/movies_datasource.dart';
@@ -54,5 +55,18 @@ class MoviedbDatasource extends MoviesDatasource {
     final response =
         await dio.get('/movie/upcoming', queryParameters: {'page': page});
     return _jsonToMovies(response.data);
+  }
+
+  @override
+  Future<Movie> getMoviById(String idMovie) async {
+    final response = await dio.get('/movie/$idMovie');
+    if (response.statusCode != 200) {
+      throw Exception('Película con el id: $idMovie no encontrada');
+    }
+    final movieDetails = MovieDetails.fromJson(response.data);
+    //mapear el json y convertir/devolver un entity
+    final Movie movie = MovieMapper.movieDetailsToEntity(movieDetails);
+
+    return movie;
   }
 }
