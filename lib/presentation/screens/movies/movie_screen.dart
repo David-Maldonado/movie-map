@@ -114,7 +114,7 @@ class _MovieDetails extends StatelessWidget {
 
         const SizedBox(
             height:
-                100) // para que pueda seguir haciendo scroll y el comportamiento es por estar con el sliver
+                10) // para que pueda seguir haciendo scroll y el comportamiento es por estar con el sliver
       ],
     );
   }

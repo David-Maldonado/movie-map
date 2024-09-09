@@ -23,7 +23,7 @@ class MoviedbDatasource extends MoviesDatasource {
     final List<Movie> movies = movieDBResponse.results
         .where((moviedb) =>
             moviedb.posterPath !=
-            'no-poster') // solo si tiene posterPath o no lo pasa para mostrar y evitar mostrar la peli o errores posibles en el widget de image.
+            'https://img.freepik.com/premium-vector/modern-design-concept-no-image-found-design_637684-247.jpg?w=740') // solo si tiene posterPath o no lo pasa para mostrar y evitar mostrar la peli o errores posibles en el widget de image.
         .map((moviedb) => MovieMapper.movieDBToEntity(moviedb))
         .toList();
     return movies;
@@ -68,5 +68,15 @@ class MoviedbDatasource extends MoviesDatasource {
     final Movie movie = MovieMapper.movieDetailsToEntity(movieDetails);
 
     return movie;
+  }
+
+  @override
+  Future<List<Movie>> searchMovies(String query) async {
+    if (query.isEmpty) return [];
+
+    final response =
+        await dio.get('/search/movie', queryParameters: {'query': query});
+
+    return _jsonToMovies(response.data);
   }
 }

@@ -7,7 +7,7 @@ class MovieDetails {
     required this.genres,
     required this.homepage,
     required this.id,
-    required this.imdbId,
+    this.imdbId, // Ahora puede ser null
     required this.originalLanguage,
     required this.originalTitle,
     required this.overview,
@@ -34,7 +34,7 @@ class MovieDetails {
   final List<Genre> genres;
   final String homepage;
   final int id;
-  final String imdbId;
+  final String? imdbId; // Ahora puede ser null
   final String originalLanguage;
   final String originalTitle;
   final String overview;
@@ -54,38 +54,44 @@ class MovieDetails {
   final int voteCount;
 
   factory MovieDetails.fromJson(Map<String, dynamic> json) => MovieDetails(
-        adult: json["adult"],
+        adult: json["adult"] ?? false,
         backdropPath: json["backdrop_path"] ?? '',
         belongsToCollection: json["belongs_to_collection"] == null
             ? null
             : BelongsToCollection.fromJson(json["belongs_to_collection"]),
-        budget: json["budget"],
-        genres: List<Genre>.from(json["genres"].map((x) => Genre.fromJson(x))),
-        homepage: json["homepage"],
-        id: json["id"],
-        imdbId: json["imdb_id"],
-        originalLanguage: json["original_language"],
-        originalTitle: json["original_title"],
-        overview: json["overview"],
-        popularity: json["popularity"]?.toDouble(),
-        posterPath: json["poster_path"],
-        productionCompanies: List<ProductionCompany>.from(
-            json["production_companies"]
-                .map((x) => ProductionCompany.fromJson(x))),
-        productionCountries: List<ProductionCountry>.from(
-            json["production_countries"]
-                .map((x) => ProductionCountry.fromJson(x))),
-        releaseDate: DateTime.parse(json["release_date"]),
-        revenue: json["revenue"],
-        runtime: json["runtime"],
-        spokenLanguages: List<SpokenLanguage>.from(
-            json["spoken_languages"].map((x) => SpokenLanguage.fromJson(x))),
-        status: json["status"],
-        tagline: json["tagline"],
-        title: json["title"],
-        video: json["video"],
-        voteAverage: json["vote_average"]?.toDouble(),
-        voteCount: json["vote_count"],
+        budget: json["budget"] ?? 0,
+        genres: json["genres"] != null
+            ? List<Genre>.from(json["genres"].map((x) => Genre.fromJson(x)))
+            : [],
+        homepage: json["homepage"] ?? '',
+        id: json["id"] ?? 0,
+        imdbId: json["imdb_id"], // Puede ser null
+        originalLanguage: json["original_language"] ?? '',
+        originalTitle: json["original_title"] ?? '',
+        overview: json["overview"] ?? '',
+        popularity: (json["popularity"]?.toDouble()) ?? 0.0,
+        posterPath: json["poster_path"] ?? '',
+        productionCompanies: json["production_companies"] != null
+            ? List<ProductionCompany>.from(json["production_companies"]
+                .map((x) => ProductionCompany.fromJson(x)))
+            : [],
+        productionCountries: json["production_countries"] != null
+            ? List<ProductionCountry>.from(json["production_countries"]
+                .map((x) => ProductionCountry.fromJson(x)))
+            : [],
+        releaseDate: _parseDate(json["release_date"]) ?? DateTime.now(),
+        revenue: json["revenue"] ?? 0,
+        runtime: json["runtime"] ?? 0,
+        spokenLanguages: json["spoken_languages"] != null
+            ? List<SpokenLanguage>.from(
+                json["spoken_languages"].map((x) => SpokenLanguage.fromJson(x)))
+            : [],
+        status: json["status"] ?? '',
+        tagline: json["tagline"] ?? '',
+        title: json["title"] ?? '',
+        video: json["video"] ?? false,
+        voteAverage: (json["vote_average"]?.toDouble()) ?? 0.0,
+        voteCount: json["vote_count"] ?? 0,
       );
 
   Map<String, dynamic> toJson() => {
@@ -96,7 +102,7 @@ class MovieDetails {
         "genres": List<dynamic>.from(genres.map((x) => x.toJson())),
         "homepage": homepage,
         "id": id,
-        "imdb_id": imdbId,
+        "imdb_id": imdbId, // Puede ser null
         "original_language": originalLanguage,
         "original_title": originalTitle,
         "overview": overview,
@@ -119,6 +125,16 @@ class MovieDetails {
         "vote_average": voteAverage,
         "vote_count": voteCount,
       };
+
+  static DateTime? _parseDate(String? date) {
+    if (date == null || date.isEmpty) return null;
+    try {
+      return DateTime.parse(date);
+    } catch (e) {
+      print("Date parsing error: $e");
+      return null;
+    }
+  }
 }
 
 class BelongsToCollection {

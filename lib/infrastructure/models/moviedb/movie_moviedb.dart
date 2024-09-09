@@ -1,3 +1,5 @@
+import 'package:intl/intl.dart';
+
 class MovieMovieDb {
   final bool adult;
   final String backdropPath;
@@ -32,20 +34,30 @@ class MovieMovieDb {
   });
 
   factory MovieMovieDb.fromJson(Map<String, dynamic> json) => MovieMovieDb(
-        adult: json["adult"] ?? false, // si no viene va a ser false
-        backdropPath: json["backdrop_path"] ?? '', // si es null para que no explote se pone un ''
-        genreIds: List<int>.from(json["genre_ids"].map((x) => x)),
-        id: json["id"],
-        originalLanguage:json["original_language"],
-        originalTitle: json["original_title"],
-        overview: json["overview"] ?? '', 
-        popularity: json["popularity"]?.toDouble(),
-        posterPath: json["poster_path"] ?? '',
-        releaseDate: DateTime.parse(json["release_date"]),
-        title: json["title"],
-        video: json["video"],
-        voteAverage: json["vote_average"]?.toDouble(),
-        voteCount: json["vote_count"],
+        adult: json["adult"] ?? false, // Si no viene, va a ser false
+        backdropPath: json["backdrop_path"] ??
+            '', // Si es null, para que no explote se pone ''
+        genreIds: json["genre_ids"] != null
+            ? List<int>.from(json["genre_ids"].map((x) => x))
+            : [], // Si es null, se asigna una lista vacía
+        id: json["id"] ?? 0, // Valor predeterminado en caso de null
+        originalLanguage: json["original_language"] ??
+            '', // Valor predeterminado en caso de null
+        originalTitle: json["original_title"] ??
+            '', // Valor predeterminado en caso de null
+        overview:
+            json["overview"] ?? '', // Valor predeterminado en caso de null
+        popularity: (json["popularity"]?.toDouble()) ??
+            0.0, // Valor predeterminado en caso de null
+        posterPath: json["poster_path"] ?? '', // Si es null, se pone ''
+        releaseDate: _parseDate(json["release_date"]) ??
+            DateTime.now(), // Manejo de fechas inválidas o null
+        title: json["title"] ?? '', // Valor predeterminado en caso de null
+        video: json["video"] ?? false, // Valor predeterminado en caso de null
+        voteAverage: (json["vote_average"]?.toDouble()) ??
+            0.0, // Valor predeterminado en caso de null
+        voteCount:
+            json["vote_count"] ?? 0, // Valor predeterminado en caso de null
       );
 
   Map<String, dynamic> toJson() => {
@@ -65,6 +77,19 @@ class MovieMovieDb {
         "vote_average": voteAverage,
         "vote_count": voteCount,
       };
+
+  static DateTime? _parseDate(String? date) {
+    if (date == null || date.isEmpty)
+      return null; // Manejo de null y cadena vacía
+    try {
+      // Ajusta el formato a tu formato esperado
+      return DateFormat('yyyy-MM-dd').parse(date);
+    } catch (e) {
+      // Log o manejo del error de análisis si es necesario
+      print("Date parsing error: $e");
+      return null;
+    }
+  }
 }
 
 enum OriginalLanguage { EN, ES, HI, ZH }
