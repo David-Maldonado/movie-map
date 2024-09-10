@@ -9,29 +9,54 @@ typedef SearchMoviesCallBack = Future<List<Movie>> Function(String query);
 
 class SeachMovieDelegate extends SearchDelegate<Movie?> {
   final SearchMoviesCallBack searchMovies;
+  List<Movie> initialMovies;
   StreamController<List<Movie>> debounceMovies = StreamController.broadcast();
+  StreamController<bool> isLoadingStream = StreamController.broadcast();
   Timer? _debouncerTimer;
 
-  SeachMovieDelegate({required this.searchMovies});
+  SeachMovieDelegate({required this.searchMovies, required this.initialMovies});
 
   void clearStreams() {
     debounceMovies.close();
   }
 
+  Widget buildResultsAndSuggestions() {
+    return StreamBuilder(
+        initialData: initialMovies,
+        stream: debounceMovies.stream,
+        builder: (context, snapshot) {
+          final movies = snapshot.data ?? [];
+          return ListView.builder(
+              itemCount: movies.length,
+              itemBuilder: (context, index) {
+                return _MovieItem(
+                  movie: movies[index],
+                  onMovieSelected: (context, movie) {
+                    clearStreams();
+                    close(context, movie);
+                  },
+                );
+              });
+        });
+  }
+
   void _onQueryChanged(String query) {
+    isLoadingStream.add(true);
     // Verificar si _debouncerTimer no es null antes de llamar a .isActive
     if (_debouncerTimer != null && _debouncerTimer!.isActive) {
       _debouncerTimer!.cancel();
     }
 
-    _debouncerTimer = Timer(const Duration(milliseconds: 200), () async {
-      if (query.isEmpty) {
-        debounceMovies.add([]);
-        return;
-      }
+    _debouncerTimer = Timer(const Duration(milliseconds: 375), () async {
+      // if (query.isEmpty) {
+      //   debounceMovies.add([]);
+      //   return;
+      // }
       final movies = await searchMovies(query);
-
+      initialMovies = movies;
       debounceMovies.add(movies);
+      isLoadingStream
+          .add(false); //detener el loading apenas se tengan las peliculas
     });
   }
 
@@ -41,11 +66,24 @@ class SeachMovieDelegate extends SearchDelegate<Movie?> {
   @override
   List<Widget>? buildActions(BuildContext context) {
     return [
-      // query es propio del delegate, es el texto de la busqueda
-      if (query.isNotEmpty)
-        FadeIn(
-            child: IconButton(
-                onPressed: () => query = '', icon: const Icon(Icons.clear)))
+      StreamBuilder(
+          initialData: false,
+          stream: isLoadingStream.stream,
+          builder: (context, snapshot) {
+            if (snapshot.data ?? false) {
+              return SpinPerfect(
+                  duration: const Duration(seconds: 10),
+                  spins: 10,
+                  // animate: query.isNotEmpty,
+                  child: IconButton(
+                      onPressed: () => query = '',
+                      icon: const Icon(Icons.refresh_outlined)));
+            }
+            return FadeIn(
+                child: IconButton(
+                    onPressed: () => query = '',
+                    icon: const Icon(Icons.clear)));
+          })
     ];
   }
 
@@ -61,30 +99,14 @@ class SeachMovieDelegate extends SearchDelegate<Movie?> {
 
   @override
   Widget buildResults(BuildContext context) {
-    return const Text('BuildResults');
+    // _onQueryChanged(query);
+    return buildResultsAndSuggestions();
   }
 
   @override
   Widget buildSuggestions(BuildContext context) {
     _onQueryChanged(query);
-    return StreamBuilder(
-        // future: searchMovies(query),
-        stream: debounceMovies.stream,
-        builder: (context, snapshot) {
-          // print('Realizando petición');
-          final movies = snapshot.data ?? [];
-          return ListView.builder(
-              itemCount: movies.length,
-              itemBuilder: (context, index) {
-                return _MovieItem(
-                  movie: movies[index],
-                  onMovieSelected: (context,movie) {
-                    clearStreams();
-                    close(context, movie);
-                  },
-                );
-              });
-        });
+    return buildResultsAndSuggestions();
   }
 }
 
