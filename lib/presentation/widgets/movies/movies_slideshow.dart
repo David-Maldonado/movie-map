@@ -39,7 +39,7 @@ class _Slide extends StatelessWidget {
   final decoration = BoxDecoration(
       borderRadius: BorderRadius.circular(20),
       boxShadow: const [
-        BoxShadow(color: Colors.black45, blurRadius: 10, offset: Offset(0, 10))
+        BoxShadow(color: Colors.black12, blurRadius: 10, offset: Offset(0, 10))
       ]);
 
   @override
@@ -56,7 +56,7 @@ class _Slide extends StatelessWidget {
               loadingBuilder: (context, child, loadingProgress) {
                 if (loadingProgress != null) {
                   return const DecoratedBox(
-                      decoration: BoxDecoration(color: Colors.black12));
+                      decoration: BoxDecoration(color: Colors.black26));
                 }
                 return FadeIn(child: child);
               },
