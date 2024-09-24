@@ -1,18 +1,31 @@
+import 'package:moviemap/presentation/views/home_views/favorites_view.dart';
+import 'package:moviemap/presentation/views/home_views/home_view.dart';
 import 'package:moviemap/presentation/widgets/widgets.dart';
 import 'package:flutter/material.dart';
 
 class HomeScreen extends StatelessWidget {
   static const name = 'home-screen';
-  final Widget childView;
-  const HomeScreen({super.key, required this.childView});
+  final int pageIndex;
 
+  const HomeScreen({super.key, required this.pageIndex});
+
+  final viewRoutes = const <Widget>[
+    HomeView(),
+    SizedBox(), // categorias
+    FavoritesView()
+  ];
 //pass:06
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // body: HomeView(),
-      body: childView,
-      bottomNavigationBar: const CustomButtomNavigation(),
+      // body: HomeView(), // indexedstack muy bueno para conservar los estados de la vista (ir y volver del screen y todo siga igual)
+      body: IndexedStack(
+        index: pageIndex,
+        children: viewRoutes,
+      ),
+      bottomNavigationBar: CustomButtomNavigation(
+        currentIndex: pageIndex,
+      ),
     );
   }
 }

@@ -56,7 +56,7 @@ class CustomAppbar extends ConsumerWidget {
                 // Asegurarse de que el contexto sigue siendo válido y la película no es nula
                 if (movie != null && context.mounted) {
                   // Navegar usando el contexto solo si está montado
-                  context.push('/movie/${movie.id}');
+                  context.push('/home/0/movie/${movie.id}');
                 }
               },
               icon: Icon(

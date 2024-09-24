@@ -1,39 +1,33 @@
 import 'package:moviemap/presentation/screens/screens.dart';
 import 'package:go_router/go_router.dart';
-import 'package:moviemap/presentation/views/home_views/favorites_view.dart';
 
-import '../../presentation/views/views.dart';
-
-final appRouter = GoRouter(initialLocation: '/', routes: [
-  ShellRoute(
-      builder: (context, state, child) {
-        return HomeScreen(childView: child);
+final appRouter = GoRouter(initialLocation: '/home/0', routes: [
+  GoRoute(
+      path: '/home/:page',
+      name: HomeScreen.name,
+      builder: (context, state) {
+        final pageIndex = state.pathParameters['page'] ?? '0';
+        return HomeScreen(pageIndex: int.parse(pageIndex));
       },
       routes: [
         GoRoute(
-            path: '/',
-            builder: (context, state) {
-              return const HomeView();
-            },
-            routes: [
-              GoRoute(
-                path: 'movie/:id',
-                name: MovieScreen.name,
-                builder: (context, state) {
-                  final movieId = state.pathParameters['id'] ?? 'no-id';
-
-                  return MovieScreen(movieId: movieId);
-                },
-              ),
-            ]),
-        GoRoute(
-          path: '/favorites',
+          path: 'movie/:id',
+          name: MovieScreen.name,
           builder: (context, state) {
-            return const FavoritesView();
+            final movieId = state.pathParameters['id'] ?? 'no-id';
+
+            return MovieScreen(movieId: movieId);
           },
         ),
       ]),
 
+
+GoRoute(path: '/',
+redirect: (_, __) => '/home/0'
+)
+
+
+]);
   //!Rutas padre/hija
   // GoRoute(
   //     path: '/',
@@ -52,4 +46,4 @@ final appRouter = GoRouter(initialLocation: '/', routes: [
   //             );
   //           }),
   //     ]),
-]);
+
