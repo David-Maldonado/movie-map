@@ -1,7 +1,9 @@
-import 'package:moviemap/presentation/views/home_views/favorites_view.dart';
-import 'package:moviemap/presentation/views/home_views/home_view.dart';
+import 'package:moviemap/presentation/views/movies/favorites_view.dart';
+import 'package:moviemap/presentation/views/movies/home_view.dart';
 import 'package:moviemap/presentation/widgets/widgets.dart';
 import 'package:flutter/material.dart';
+
+import '../../views/movies/categories_view.dart';
 
 class HomeScreen extends StatelessWidget {
   static const name = 'home-screen';
@@ -11,7 +13,7 @@ class HomeScreen extends StatelessWidget {
 
   final viewRoutes = const <Widget>[
     HomeView(),
-    SizedBox(), // categorias
+    CategoriesView(), // categorias
     FavoritesView()
   ];
 //pass:06
