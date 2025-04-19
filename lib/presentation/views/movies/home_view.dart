@@ -9,7 +9,7 @@ import 'package:moviemap/presentation/widgets/shared/custom_appbar.dart';
 import 'package:moviemap/presentation/widgets/shared/full_screen_loader.dart';
 
 class HomeView extends ConsumerStatefulWidget {
-  const HomeView();
+  const HomeView({super.key});
 
   @override
   HomeViewState createState() => HomeViewState();

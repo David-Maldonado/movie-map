@@ -1,6 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:moviemap/domain/entities/movie.dart';
-import 'package:moviemap/presentation/delegates/seach_movie_delegate.dart';
 import 'package:moviemap/presentation/providers/providers.dart';
 
 //un provider -- una manera de hacerlo
@@ -14,7 +13,6 @@ final searchyMoviesProvider =
 });
 
 typedef SearchMoviesCallBack = Future<List<Movie>> Function(String query);
-
 
 class SearchMoviesNotifier extends StateNotifier<List<Movie>> {
   final SearchMoviesCallBack searchMovies;
