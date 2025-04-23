@@ -11,16 +11,54 @@ class FavoritesView extends ConsumerStatefulWidget {
 }
 
 class FavoritesViewState extends ConsumerState<FavoritesView> {
+  bool isLastPage = false;
+  bool isLoading = false;
   @override
   void initState() {
-    ref.read(favoriteMoviesProvider.notifier).loadNextPage();
+    loadNextPage();
     super.initState();
+  }
+
+  void loadNextPage() async {
+    if (isLoading || isLastPage) return;
+    isLoading = true;
+
+    final movies =
+        await ref.read(favoriteMoviesProvider.notifier).loadNextPage();
+    isLoading = false;
+
+    if (movies.isEmpty) {
+      isLastPage = true;
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     final favoriteMovies = ref.watch(favoriteMoviesProvider).values.toList();
 
-    return MovieMasonry(movies: favoriteMovies);
+    //Si no hay favoritos
+
+    if (favoriteMovies.isEmpty) {
+      final colors = Theme.of(context).colorScheme;
+
+      return Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Icon(Icons.favorite_outline_sharp, size: 60, color: colors.primary),
+            Text('¡Kore...!',
+                style: TextStyle(fontSize: 52, color: colors.primary)),
+            const Text(
+              'No tenés películas favoritas',
+              style: TextStyle(fontSize: 22, color: Colors.black54),
+            )
+          ],
+        ),
+      );
+    }
+
+    return Scaffold(
+        body: MovieMasonry(loadNextPage: loadNextPage, movies: favoriteMovies));
   }
 }

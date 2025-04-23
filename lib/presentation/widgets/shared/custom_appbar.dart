@@ -32,7 +32,7 @@ class CustomAppbar extends ConsumerWidget {
               ],
             ),
             Text(
-              'Cinema Explorer',
+              'Movie Explorer',
               style: titleStyle,
               textAlign: TextAlign.center,
             ),
